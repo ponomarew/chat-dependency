@@ -17,15 +17,15 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/exyte/MediaPicker.git",
-            from: "2.0.0"
+            exact: "2.2.3"
         ),
         .package(
             url: "https://github.com/exyte/ActivityIndicatorView",
-            from: "1.0.0"
+            exact: "1.1.1"
         ),
         .package(
            url: "https://github.com/Giphy/giphy-ios-sdk",
-           from: "2.2.13"
+           exact: "2.2.13"
         ),
     ],
     targets: [
