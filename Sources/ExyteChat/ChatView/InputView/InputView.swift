@@ -120,8 +120,9 @@ struct InputView: View {
             viewOnTop
             HStack(alignment: .bottom, spacing: 10) {
                 HStack(alignment: .bottom, spacing: 0) {
-                    leftView
+//                    leftView
                     middleView
+                        .padding(.leading, 12)
                     rightOutsideButton
                         .padding(.trailing, 12)
                         .padding(.bottom, 12)
@@ -142,7 +143,10 @@ struct InputView: View {
             .padding(.vertical, 16)
         }
         .background(backgroundColor)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .roundedCorner(
+            8, corners: [.topLeft, .topRight]
+        )
+//        .clipShape(RoundedRectangle(cornerRadius: 8))
         .onAppear {
             viewModel.recordingPlayer = recordingPlayer
             viewModel.setRecorderSettings(recorderSettings: recorderSettings)
