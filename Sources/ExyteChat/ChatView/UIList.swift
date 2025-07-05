@@ -30,6 +30,7 @@ struct UIList<MessageContent: View, InputView: View>: UIViewRepresentable {
     var inputView: InputView
 
     let type: ChatType
+    let chatTypeFromRest: ChatTypeFromRest
     let showDateHeaders: Bool
     let isScrollEnabled: Bool
     let avatarSize: CGFloat
@@ -530,10 +531,10 @@ struct UIList<MessageContent: View, InputView: View>: UIViewRepresentable {
         
         @ViewBuilder
         func sectionHeaderViewBuilder(_ section: Int) -> some View {
-            if let mainHeaderBuilder, section == 0 {
+            if let mainHeaderBuilder, section != 0 {
                 VStack(spacing: 0) {
-                    mainHeaderBuilder()
                     dateViewBuilder(section)
+                    mainHeaderBuilder()
                 }
             } else {
                 dateViewBuilder(section)

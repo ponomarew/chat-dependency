@@ -16,6 +16,11 @@ public enum ChatType: CaseIterable {
     case comments // the latest message is at the top, new messages appear from the top
 }
 
+public enum ChatTypeFromRest: String, Codable {
+    case user
+    case community
+}
+
 public enum ReplyMode: CaseIterable {
     case quote // when replying to message A, new message will appear as the newest message, quoting message A in its body
     case answer // when replying to message A, new message with appear direclty below message A as a separate cell without duplicating message A in its body
@@ -78,6 +83,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
     // MARK: - Parameters
     
     let type: ChatType
+    let chatTypeFromRest: ChatTypeFromRest
     let sections: [MessagesSection]
     let ids: [String]
     let didSendMessage: (DraftMessage) -> Void
@@ -148,6 +154,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
     
     public init(messages: [Message],
                 chatType: ChatType = .conversation,
+                chatTypeFromRest: ChatTypeFromRest = .user,
                 replyMode: ReplyMode = .quote,
                 didSendMessage: @escaping (DraftMessage) -> Void,
                 reactionDelegate: ReactionDelegate? = nil,
@@ -156,6 +163,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
                 messageMenuAction: MessageMenuActionClosure?,
                 localization: ChatLocalization) {
         self.type = chatType
+        self.chatTypeFromRest = chatTypeFromRest
         self.didSendMessage = didSendMessage
         self.reactionDelegate = reactionDelegate
         self.sections = ChatView.mapMessages(messages, chatType: chatType, replyMode: replyMode)
@@ -308,6 +316,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
             headerBuilder: headerBuilder,
             inputView: inputView,
             type: type,
+            chatTypeFromRest: chatTypeFromRest,
             showDateHeaders: showDateHeaders,
             isScrollEnabled: isScrollEnabled,
             avatarSize: avatarSize,
