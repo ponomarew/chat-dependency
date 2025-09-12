@@ -17,11 +17,23 @@ extension DateFormatter {
     static let relativeDateFormatter = {
         let relativeDateFormatter = DateFormatter()
         relativeDateFormatter.timeStyle = .none
-        relativeDateFormatter.dateStyle = .full
-        relativeDateFormatter.doesRelativeDateFormatting = true
+        relativeDateFormatter.dateFormat = "d MMMM"
+        relativeDateFormatter.locale = Locale(identifier: "ru_RU")
 
         return relativeDateFormatter
     }()
+    
+    static func formatRelativeDate(_ date: Date) -> String {
+        let calendar = Calendar.current
+        
+        if calendar.isDateInToday(date) {
+            return "Сегодня"
+        } else if calendar.isDateInYesterday(date) {
+            return "Вчера"
+        } else {
+            return relativeDateFormatter.string(from: date)
+        }
+    }
 
     static func timeString(_ seconds: Int) -> String {
         let hour = Int(seconds) / 3600

@@ -3,6 +3,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct AttachmentsPage: View {
 
@@ -13,16 +14,7 @@ struct AttachmentsPage: View {
 
     var body: some View {
         if attachment.type == .image {
-            CachedAsyncImage(url: attachment.full, urlCache: .imageCache) { phase in
-                switch phase {
-                case let .success(image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                default:
-                    ActivityIndicator()
-                }
-            }
+            FullscreenImageView(url: attachment.full)
         } else if attachment.type == .video {
             VideoView(viewModel: VideoViewModel(attachment: attachment))
         } else {
@@ -34,5 +26,19 @@ struct AttachmentsPage: View {
                     Text("Unknown", bundle: .module)
                 }
         }
+    }
+}
+
+struct FullscreenImageView: View {
+    let url: URL
+    
+    var body: some View {
+        KFImage(url)
+            .cacheOriginalImage(true) // Cache original for fullscreen
+            .placeholder {
+                ActivityIndicator()
+            }
+            .resizable()
+            .aspectRatio(contentMode: .fit)
     }
 }

@@ -6,21 +6,21 @@ import Foundation
 
 extension URLCache {
     static let imageCache = URLCache(
-        memoryCapacity: 512.megabytes(),
-        diskCapacity: 2.gigabytes()
+        memoryCapacity: 64.megabytes(), // Reduced for avatars
+        diskCapacity: 256.megabytes()   // Reduced for avatars
     )
 }
 
 private extension Int {
     func kilobytes() -> Int {
-        self * 1024 * 1024
+        self * 1024
     }
 
     func megabytes() -> Int {
-        self.kilobytes() * 1024
+        self * 1024 * 1024
     }
 
     func gigabytes() -> Int {
-        self.megabytes() * 1024
+        self * 1024 * 1024 * 1024
     }
 }

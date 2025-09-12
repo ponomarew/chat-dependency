@@ -15,7 +15,7 @@ struct MessagesSection: Equatable {
     }
 
     var formattedDate: String {
-        DateFormatter.relativeDateFormatter.string(from: date)
+        DateFormatter.formatRelativeDate(date)
     }
 
     static func == (lhs: MessagesSection, rhs: MessagesSection) -> Bool {

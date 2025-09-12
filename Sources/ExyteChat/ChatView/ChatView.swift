@@ -8,6 +8,7 @@
 import SwiftUI
 import GiphyUISDK
 import ExyteMediaPicker
+import Kingfisher
 
 public typealias MediaPickerParameters = SelectionParamsHolder
 
@@ -195,6 +196,9 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
                         }
                     )
                     .ignoresSafeArea()
+                    .onDisappear {
+                        URLCache.imageCache.removeAllCachedResponses()
+                    }
                 }
             }
             .onChange(of: selectedMedia) { newValue in
@@ -350,6 +354,9 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
             globalFocusState.focus = nil
         }
         .onAppear {
+            // Configure Kingfisher for optimal avatar loading
+            KingfisherManager.configureForAvatars()
+            
             viewModel.didSendMessage = didSendMessage
             viewModel.inputViewModel = inputViewModel
             viewModel.globalFocusState = globalFocusState
@@ -417,9 +424,16 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
             )
         ) {
             ChatMessageView(
-                viewModel: viewModel, messageBuilder: messageBuilder, row: row, chatType: type,
-                avatarSize: avatarSize, tapAvatarClosure: nil, messageStyler: messageStyler,
-                isDisplayingMessageMenu: true, showMessageTimeView: showMessageTimeView,
+                viewModel: viewModel,
+                messageBuilder: messageBuilder,
+                row: row,
+                chatType: type,
+                chatTypeFromRest: chatTypeFromRest,
+                avatarSize: avatarSize,
+                tapAvatarClosure: nil,
+                messageStyler: messageStyler,
+                isDisplayingMessageMenu: true,
+                showMessageTimeView: showMessageTimeView,
                 messageFont: messageFont
             )
             .onTapGesture {

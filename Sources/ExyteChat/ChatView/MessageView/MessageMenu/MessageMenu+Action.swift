@@ -61,10 +61,15 @@ public enum DefaultMessageMenuAction: MessageMenuAction {
     static public func menuItems(for message: Message) -> [DefaultMessageMenuAction] {
         let actions: [DefaultMessageMenuAction]
         
+        // Check if message is from current user
+        let isCurrentUserMessage = message.user.isCurrentUser
+        
         if message.status == .error(DraftMessage(text: message.text, medias: [], giphyMedia: nil, recording: nil, replyMessage: nil, createdAt: message.createdAt)) {
-            actions = [.copy, .delete, .resend]
+            // For error messages, show copy, delete (if own message), and resend
+            actions = isCurrentUserMessage ? [.copy, .delete, .resend] : [.copy, .resend]
         } else {
-            actions = [.copy, .delete]
+            // For normal messages, show copy and delete (if own message)
+            actions = isCurrentUserMessage ? [.copy, .delete] : [.copy]
         }
         
         return actions

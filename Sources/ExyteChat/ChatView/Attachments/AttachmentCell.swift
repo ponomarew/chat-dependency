@@ -3,6 +3,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct AttachmentCell: View {
 
@@ -31,33 +32,37 @@ struct AttachmentCell: View {
             }
         }
         .contentShape(Rectangle())
-        .onTapGesture {
-            onTap(attachment)
-        }
+        .highPriorityGesture(
+            TapGesture().onEnded { onTap(attachment) }
+        )
     }
 
     var content: some View {
-        AsyncImageView(url: attachment.thumbnail)
+        ChatOptimizedImageView(url: attachment.thumbnail)
+        
     }
 }
 
-struct AsyncImageView: View {
+struct ChatOptimizedImageView: View {
 
     @Environment(\.chatTheme) var theme
     let url: URL
 
     var body: some View {
-        CachedAsyncImage(url: url, urlCache: .imageCache) { imageView in
-            imageView
-                .resizable()
-                .scaledToFill()
-        } placeholder: {
-            ZStack {
-                Rectangle()
-                    .foregroundColor(theme.colors.inputBG)
-                    .frame(minWidth: 100, minHeight: 100)
-                ActivityIndicator(size: 30, showBackground: false)
+        KFImage(url)
+            .setProcessor(DownsamplingImageProcessor(size: CGSize(width: 350, height: 350)))
+            .cacheOriginalImage(false) // Don't cache original for chat
+            .placeholder {
+                ZStack {
+                    Rectangle()
+                        .foregroundColor(theme.colors.inputBG)
+                        .frame(minWidth: 100, minHeight: 100)
+                    ActivityIndicator(size: 30, showBackground: false)
+                }
+                .allowsHitTesting(false)
             }
-        }
+            .resizable()
+            .scaledToFill()
+            .drawingGroup() // Optimize rendering performance
     }
 }

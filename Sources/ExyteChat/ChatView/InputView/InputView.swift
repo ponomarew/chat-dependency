@@ -8,6 +8,7 @@
 import SwiftUI
 import ExyteMediaPicker
 import GiphyUISDK
+import Kingfisher
 
 public enum InputViewStyle {
     case message
@@ -120,7 +121,7 @@ struct InputView: View {
             viewOnTop
             HStack(alignment: .bottom, spacing: 10) {
                 HStack(alignment: .bottom, spacing: 0) {
-//                    leftView
+                    leftView
                     middleView
                         .padding(.leading, 12)
                     rightOutsideButton
@@ -306,8 +307,8 @@ struct InputView: View {
                     Spacer()
                     
                     if let first = message.attachments.first {
-                        AsyncImageView(url: first.thumbnail)
-                            .viewSize(30)
+                        ChatOptimizedImageView(url: first.thumbnail)
+                            .frame(width: 30, height: 30)
                             .cornerRadius(4)
                             .padding(.trailing, 16)
                     }

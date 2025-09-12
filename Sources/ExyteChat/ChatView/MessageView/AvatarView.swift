@@ -2,6 +2,7 @@
 //  Created by Alex.M on 07.07.2022.
 //
 
+import Kingfisher
 import SwiftUI
 
 struct AvatarView: View {
@@ -10,15 +11,14 @@ struct AvatarView: View {
     let avatarSize: CGFloat
 
     var body: some View {
-        CachedAsyncImage(url: url, urlCache: .imageCache) { image in
-            image
-                .resizable()
-                .scaledToFill()
-        } placeholder: {
-            Rectangle().fill(Color.gray)
-        }
-        .viewSize(avatarSize)
-        .clipShape(Circle())
+        KFImage(url)
+            .placeholder {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.3))
+            }
+            .avatarStyle(size: avatarSize)
+            .allowsHitTesting(true) // Ensure taps pass through
+            .contentShape(RoundedRectangle(cornerRadius: 12)) // Define tap area
     }
 }
 

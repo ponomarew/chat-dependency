@@ -17,6 +17,7 @@ struct MessageView: View {
     let positionInUserGroup: PositionInUserGroup
     let positionInMessagesSection: PositionInMessagesSection
     let chatType: ChatType
+    let chatTypeFromRest: ChatTypeFromRest
     let avatarSize: CGFloat
     let tapAvatarClosure: ChatView.TapAvatarClosure?
     let messageStyler: (String) -> AttributedString
@@ -34,6 +35,8 @@ struct MessageView: View {
     @State var bubbleSize: CGSize = .zero
     
     static let widthWithMedia: CGFloat = 204
+    static let attachmentsHorizontalPadding: CGFloat = 16
+    static let attachmentsTopPadding: CGFloat = 16
     static let horizontalNoAvatarPadding: CGFloat = 8
     static let horizontalAvatarPadding: CGFloat = 8
     static let horizontalTextPadding: CGFloat = 12
@@ -76,10 +79,7 @@ struct MessageView: View {
     }
 
     var showAvatar: Bool {
-        isDisplayingMessageMenu
-        || positionInUserGroup == .single
-        || (chatType == .conversation && positionInUserGroup == .last)
-        || (chatType == .comments && positionInUserGroup == .first)
+        chatTypeFromRest == .community
     }
 
     var topPadding: CGFloat {
@@ -96,10 +96,10 @@ struct MessageView: View {
     }
 
     var body: some View {
-        HStack(alignment: .bottom, spacing: 0) {
-//            if !message.user.isCurrentUser {
-//                avatarView
-//            }
+        HStack(alignment: .top, spacing: 0) {
+            if !message.user.isCurrentUser, chatTypeFromRest == .community {
+                avatarView
+            }
 
             VStack(alignment: message.user.isCurrentUser ? .trailing : .leading, spacing: 2) {
                 if !isDisplayingMessageMenu, let reply = message.replyMessage?.toMessage() {
@@ -130,8 +130,17 @@ struct MessageView: View {
     func bubbleView(_ message: Message) -> some View {
         ZStack(alignment: message.user.isCurrentUser ? .topLeading : .topTrailing) {
             VStack(alignment: .leading, spacing: 0) {
+                if chatTypeFromRest == .community, !message.user.isCurrentUser {
+                    Text(message.user.name)
+                        .frame(height: 18)
+                        .padding(.top, 10)
+                        .padding(.horizontal, 20)
+                        .foregroundStyle(.orange)
+                        .font(.system(size: 12)).fontWeight(.medium)
+                }
                 if !message.attachments.isEmpty {
                     attachmentsView(message)
+                        .padding(.bottom, message.text.isEmpty ? 12 : 0)
                 }
                 
                 if !message.text.isEmpty {
@@ -187,9 +196,10 @@ struct MessageView: View {
             if showAvatar {
                 AvatarView(url: message.user.avatarURL, avatarSize: avatarSize)
                     .contentShape(Circle())
-                    .onTapGesture {
+                    .highPriorityGesture(TapGesture().onEnded {
+                        print("🖱️ Avatar tapped for user: \(message.user.id)")
                         tapAvatarClosure?(message.user, message.id)
-                    }
+                    })
             } else {
                 Color.clear.viewSize(avatarSize)
             }
@@ -203,15 +213,20 @@ struct MessageView: View {
         AttachmentsGrid(attachments: message.attachments) {
             viewModel.presentAttachmentFullScreen($0)
         }
+        .drawingGroup()
         .applyIf(message.attachments.count > 1) {
             $0
                 .padding(.top, MessageView.horizontalAttachmentPadding)
                 .padding(.horizontal, MessageView.horizontalAttachmentPadding)
         }
+        .padding(.top, MessageView.attachmentsTopPadding)
+        .padding(.horizontal, MessageView.attachmentsHorizontalPadding)
         .overlay(alignment: .bottomTrailing) {
             if message.text.isEmpty {
                 messageTimeView()
                     .padding(4)
+                    .offset(x: -MessageView.attachmentsHorizontalPadding)
+                    .allowsHitTesting(false)
             }
         }
         .contentShape(Rectangle())
@@ -323,10 +338,10 @@ extension View {
         let radius: CGFloat = !message.attachments.isEmpty ? 8 : 16
         let additionalMediaInset: CGFloat = message.attachments.count > 1 ? 2 : 0
         self
-            .frame(width: message.attachments.isEmpty ? nil : MessageView.widthWithMedia + additionalMediaInset)
+            .frame(width: message.attachments.isEmpty ? nil : MessageView.widthWithMedia + additionalMediaInset + MessageView.attachmentsHorizontalPadding * 2)
             .foregroundColor(theme.colors.messageText(message.user.type))
             .background {
-                if isReply || !message.text.isEmpty || message.recording != nil {
+                if isReply || !message.text.isEmpty || !message.attachments.isEmpty || message.recording != nil {
                     Rectangle()
                         .foregroundColor(theme.colors.messageBG(message.user.type))
                         .opacity(isReply ? theme.style.replyOpacity : 1)
@@ -398,6 +413,7 @@ struct MessageView_Preview: PreviewProvider {
                 positionInUserGroup: .single,
                 positionInMessagesSection: .single,
                 chatType: .conversation,
+                chatTypeFromRest: .user,
                 avatarSize: 32,
                 tapAvatarClosure: nil,
                 messageStyler: AttributedString.init,

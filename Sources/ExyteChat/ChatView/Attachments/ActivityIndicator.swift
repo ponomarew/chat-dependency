@@ -11,7 +11,7 @@ import ActivityIndicatorView
 struct ActivityIndicator: View {
 
     @Environment(\.chatTheme) var theme
-    var size: CGFloat = 50
+    var size: CGFloat = 18
     var showBackground = true
 
     var body: some View {
@@ -21,10 +21,10 @@ struct ActivityIndicator: View {
                     .frame(width: 100, height: 100)
                     .cornerRadius(8)
             }
-
-            ActivityIndicatorView(isVisible: .constant(true), type: .flickeringDots())
-                .foregroundColor(theme.colors.sendButtonBackground)
-                .frame(width: size, height: size)
+                
+            ActivityIndicatorView(isVisible: .constant(true), type: .default(count: 8))
+                .foregroundColor(.gray)
+                .frame(width: 18, height: 18)
         }
     }
 }

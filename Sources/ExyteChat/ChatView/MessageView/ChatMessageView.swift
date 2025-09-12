@@ -17,6 +17,7 @@ struct ChatMessageView<MessageContent: View>: View {
 
     let row: MessageRow
     let chatType: ChatType
+    let chatTypeFromRest: ChatTypeFromRest
     let avatarSize: CGFloat
     let tapAvatarClosure: ChatView.TapAvatarClosure?
     let messageStyler: (String) -> AttributedString
@@ -43,6 +44,7 @@ struct ChatMessageView<MessageContent: View>: View {
                     positionInUserGroup: row.positionInUserGroup,
                     positionInMessagesSection: row.positionInMessagesSection,
                     chatType: chatType,
+                    chatTypeFromRest: chatTypeFromRest,
                     avatarSize: avatarSize,
                     tapAvatarClosure: tapAvatarClosure,
                     messageStyler: messageStyler,
