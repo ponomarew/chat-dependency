@@ -28,12 +28,12 @@
       }
     },
     {
-      "identity" : "mediapicker",
+      "identity" : "picker-dependency",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/exyte/MediaPicker.git",
+      "location" : "https://github.com/ponomarew/picker-dependency.git",
       "state" : {
-        "revision" : "88769b1b69c2b5e5fa5b65522c08bc7b667a6cb8",
-        "version" : "2.2.3"
+        "revision" : "e667240e769b85640b77bfad816429099f02daaf",
+        "version" : "2.0.0"
       }
     }
   ],

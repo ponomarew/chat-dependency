@@ -70,7 +70,7 @@ struct FullscreenMediaPages: View {
                                     .overlay {
                                         if viewModel.index == index {
                                             RoundedRectangle(cornerRadius: 4)
-                                                .stroke(theme.colors.sendButtonBackground, lineWidth: 2)
+                                                .stroke(.gray, lineWidth: 2)
                                         }
                                     }
                                     .padding(.vertical, 1)
@@ -126,7 +126,7 @@ struct FullscreenMediaPages: View {
                             viewModel.toggleVideoPlaying()
                         }
 
-                    (viewModel.videoMuted ? theme.images.fullscreenMedia.unmute : theme.images.fullscreenMedia.mute)
+                    (viewModel.videoMuted ? theme.images.fullscreenMedia.mute : theme.images.fullscreenMedia.unmute)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 24, height: 24)

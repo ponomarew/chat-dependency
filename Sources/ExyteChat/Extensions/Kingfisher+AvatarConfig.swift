@@ -32,11 +32,12 @@ extension KingfisherManager {
 extension KFImage {
     func avatarStyle(size: CGFloat) -> some View {
         self
-            .resizing(referenceSize: CGSize(width: 64, height: 64), mode: .aspectFill)
+            .resizable()
+            .resizing(referenceSize: CGSize(width: 64, height: 64), mode: .aspectFit)
             .fade(duration: 0.2)
             .cacheOriginalImage()
             .viewSize(size)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
             .drawingGroup()
     }
 }

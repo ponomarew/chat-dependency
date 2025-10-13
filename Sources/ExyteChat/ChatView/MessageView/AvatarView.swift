@@ -13,12 +13,13 @@ struct AvatarView: View {
     var body: some View {
         KFImage(url)
             .placeholder {
-                Rectangle()
-                    .fill(Color.gray.opacity(0.3))
+                Image(.avatarPlaceholder)
+                    .resizable()
+                    .scaledToFit()
             }
             .avatarStyle(size: avatarSize)
             .allowsHitTesting(true) // Ensure taps pass through
-            .contentShape(RoundedRectangle(cornerRadius: 12)) // Define tap area
+            .contentShape(RoundedRectangle(cornerRadius: 8)) // Define tap area
     }
 }
 

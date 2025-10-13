@@ -16,8 +16,8 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/exyte/MediaPicker.git",
-            exact: "2.2.3"
+            url: "https://github.com/ponomarew/picker-dependency.git",
+            exact: "2.0.0"
         ),
         .package(
             url: "https://github.com/exyte/ActivityIndicatorView",
@@ -32,7 +32,7 @@ let package = Package(
         .target(
             name: "ExyteChat",
             dependencies: [
-                .product(name: "ExyteMediaPicker", package: "MediaPicker"),
+                .product(name: "ExyteMediaPicker", package: "picker-dependency"),
                 .product(name: "ActivityIndicatorView", package: "ActivityIndicatorView"),
                 .product(name: "GiphyUISDK", package: "giphy-ios-sdk")
             ],

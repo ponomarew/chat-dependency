@@ -36,7 +36,7 @@ struct MessageView: View {
     
     static let widthWithMedia: CGFloat = 204
     static let attachmentsHorizontalPadding: CGFloat = 16
-    static let attachmentsTopPadding: CGFloat = 16
+    static let attachmentsTopPadding: CGFloat = 10
     static let horizontalNoAvatarPadding: CGFloat = 8
     static let horizontalAvatarPadding: CGFloat = 8
     static let horizontalTextPadding: CGFloat = 12
@@ -114,11 +114,12 @@ struct MessageView: View {
                 }
 
                 bubbleView(message)
-                    .shadow(color: Color(hex: "#003350").opacity(0.06), radius: 16, x: 0, y: 4)
+                    // Lighter shadow to reduce offscreen rendering and GPU load in long lists
+                    .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 2)
             }
         }
         
-        .padding(.leading, message.user.isCurrentUser ? 0 : 16)
+        .padding(.leading, message.user.isCurrentUser ? 0 : chatTypeFromRest == .user ? 16 : 8)
         .padding(.top, topPadding)
         .padding(.bottom, bottomPadding)
         .padding(.trailing, message.user.isCurrentUser ? 16 : 0)
@@ -140,7 +141,13 @@ struct MessageView: View {
                 }
                 if !message.attachments.isEmpty {
                     attachmentsView(message)
-                        .padding(.bottom, message.text.isEmpty ? 12 : 0)
+                        .padding(
+                            .top,
+                            message.text.isEmpty
+                            ? max(0, 16 - (MessageView.attachmentsTopPadding + (message.attachments.count > 1 ? MessageView.horizontalAttachmentPadding : 0)))
+                            : 0
+                        )
+                        .padding(.bottom, message.text.isEmpty ? 16 : 4)
                 }
                 
                 if !message.text.isEmpty {
@@ -204,7 +211,7 @@ struct MessageView: View {
                 Color.clear.viewSize(avatarSize)
             }
         }
-        .padding(.horizontal, MessageView.horizontalAvatarPadding)
+        .padding(.trailing, MessageView.horizontalAvatarPadding)
         .sizeGetter($avatarViewSize)
     }
 
@@ -213,7 +220,6 @@ struct MessageView: View {
         AttachmentsGrid(attachments: message.attachments) {
             viewModel.presentAttachmentFullScreen($0)
         }
-        .drawingGroup()
         .applyIf(message.attachments.count > 1) {
             $0
                 .padding(.top, MessageView.horizontalAttachmentPadding)
@@ -271,7 +277,8 @@ struct MessageView: View {
                     
                 }
                 .padding(.horizontal, 20)
-                .padding(.vertical, 16)
+                .padding(.top, (!message.user.isCurrentUser && chatTypeFromRest == .community) ? 6 : 10)
+                .padding(.bottom, 10)
             case .vstack:
                 VStack(alignment: .leading, spacing: 4) {
                     messageView
@@ -294,7 +301,8 @@ struct MessageView: View {
                     }
                 }
                 .padding(.horizontal, 20)
-                .padding(.vertical, 12)
+                .padding(.top, (!message.user.isCurrentUser && chatTypeFromRest == .community) ? 6 : 10)
+                .padding(.bottom, 10)
             case .overlay:
                 messageView
                     .padding(.vertical, 8)

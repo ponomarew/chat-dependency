@@ -196,9 +196,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
                         }
                     )
                     .ignoresSafeArea()
-                    .onDisappear {
-                        URLCache.imageCache.removeAllCachedResponses()
-                    }
+                    // Avoid flushing image cache on dismiss to reduce network churn and CPU spikes
                 }
             }
             .onChange(of: selectedMedia) { newValue in
