@@ -46,6 +46,8 @@ struct AttachmentCell: View {
             ChatOptimizedImageView(url: attachment.thumbnail)
         } else {
             VideoThumbnailView(attachment: attachment)
+                .scaledToFill() // Ensure it fills the square frame
+                .clipped() // Crop excess parts to fit the square
         }
         
     }

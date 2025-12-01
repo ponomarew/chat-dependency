@@ -13,7 +13,7 @@ final class FullscreenMediaPagesViewModel: ObservableObject {
     @Published var offset: CGSize = .zero
 
     @Published var videoPlaying = false
-    @Published var videoMuted = false
+    @Published var videoMuted = true
 
     @Published var toggleVideoPlaying = {}
     @Published var toggleVideoMuted = {}

@@ -32,7 +32,7 @@ public enum DefaultMessageMenuAction: MessageMenuAction {
         case .delete:
             "Удалить сообщение"
         case .resend:
-            "Повтоить отправку"
+            "Повторить отправку"
         }
     }
 
@@ -41,9 +41,9 @@ public enum DefaultMessageMenuAction: MessageMenuAction {
         case .copy:
             Image(systemName: "doc.on.doc")
         case .delete:
-            Image(systemName: "arrowshape.turn.up.left")
+            Image(systemName: "trash")
         case .resend:
-            Image(systemName: "bubble.and.pencil")
+            Image(systemName: "arrow.counterclockwise")
         }
     }
 

@@ -56,6 +56,7 @@ public struct Message: Identifiable, Hashable, Sendable {
     public var replyMessage: ReplyMessage?
 
     public var triggerRedraw: UUID?
+    public var seq: Int?
 
     public init(id: String,
                 user: User,
@@ -65,7 +66,8 @@ public struct Message: Identifiable, Hashable, Sendable {
                 attachments: [Attachment] = [],
                 reactions: [Reaction] = [],
                 recording: Recording? = nil,
-                replyMessage: ReplyMessage? = nil) {
+                replyMessage: ReplyMessage? = nil,
+                seq: Int? = nil) {
 
         self.id = id
         self.user = user
@@ -76,6 +78,7 @@ public struct Message: Identifiable, Hashable, Sendable {
         self.reactions = reactions
         self.recording = recording
         self.replyMessage = replyMessage
+        self.seq = seq
     }
 
     public static func makeMessage(
@@ -119,7 +122,9 @@ extension Message: Equatable {
         lhs.attachments == rhs.attachments &&
         lhs.reactions == rhs.reactions &&
         lhs.recording == rhs.recording &&
-        lhs.replyMessage == rhs.replyMessage
+        lhs.replyMessage == rhs.replyMessage &&
+        lhs.triggerRedraw == rhs.triggerRedraw &&
+        lhs.seq == rhs.seq
     }
 }
 

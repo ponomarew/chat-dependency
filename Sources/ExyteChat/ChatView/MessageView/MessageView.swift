@@ -138,6 +138,9 @@ struct MessageView: View {
                         .padding(.horizontal, 20)
                         .foregroundStyle(.orange)
                         .font(.system(size: 12)).fontWeight(.medium)
+                        .highPriorityGesture(TapGesture().onEnded {
+                            tapAvatarClosure?(message.user, message.id)
+                        })
                 }
                 if !message.attachments.isEmpty {
                     attachmentsView(message)
@@ -229,10 +232,23 @@ struct MessageView: View {
         .padding(.horizontal, MessageView.attachmentsHorizontalPadding)
         .overlay(alignment: .bottomTrailing) {
             if message.text.isEmpty {
-                messageTimeView()
-                    .padding(4)
-                    .offset(x: -MessageView.attachmentsHorizontalPadding)
-                    .allowsHitTesting(false)
+                HStack(spacing: 4) {
+                    messageTimeView()
+                    
+                    if message.user.isCurrentUser, let status = message.status {
+                        MessageStatusView(status: status) {
+                            if case let .error(draft) = status {
+                                viewModel.sendMessage(draft)
+                            }
+                        }
+                        .frame(width: 16, height: 16)
+                    }
+                }
+                .padding(6)
+                .background(Color.black.opacity(0.5))
+                .cornerRadius(10)
+                .padding(4)
+                .offset(x: -MessageView.attachmentsHorizontalPadding)
             }
         }
         .contentShape(Rectangle())
@@ -265,15 +281,15 @@ struct MessageView: View {
                     timeView
                         .padding(.trailing, message.user.isCurrentUser ? 0 : 0)
 
-//                    if message.user.isCurrentUser, let status = message.status {
-//                        MessageStatusView(status: status) {
-//                            if case let .error(draft) = status {
-//                                viewModel.sendMessage(draft)
-//                            }
-//                        }
-//                        .frame(width: 16, height: 16)
-//                        .sizeGetter($statusSize)
-//                    }
+                    if message.user.isCurrentUser, let status = message.status {
+                        MessageStatusView(status: status) {
+                            if case let .error(draft) = status {
+                                viewModel.sendMessage(draft)
+                            }
+                        }
+                        .frame(width: 16, height: 16)
+                        .sizeGetter($statusSize)
+                    }
                     
                 }
                 .padding(.horizontal, 20)
@@ -288,16 +304,16 @@ struct MessageView: View {
                         timeView
                             .padding(.trailing, message.user.isCurrentUser ? 0 : 0)
                         
-//                        if message.user.isCurrentUser, let status = message.status {
-//                            MessageStatusView(status: status) {
-//                                if case let .error(draft) = status {
-//                                    viewModel.sendMessage(draft)
-//                                }
-//                            }
-//                            .frame(width: 16, height: 16)
-////                            .padding(.trailing, 20)
-//                            .sizeGetter($statusSize)
-//                        }
+                        if message.user.isCurrentUser, let status = message.status {
+                            MessageStatusView(status: status) {
+                                if case let .error(draft) = status {
+                                    viewModel.sendMessage(draft)
+                                }
+                            }
+                            .frame(width: 16, height: 16)
+//                            .padding(.trailing, 20)
+                            .sizeGetter($statusSize)
+                        }
                     }
                 }
                 .padding(.horizontal, 20)

@@ -24,7 +24,7 @@ struct MessageStatusView: View {
                     .resizable()
                     .foregroundColor(Color(hex: "#ABB5C8"))
             case .read:
-                theme.images.message.checkmarks
+                Image(.msgRead)
                     .resizable()
                     .foregroundColor(Color(hex: "#ABB5C8"))
             case .error:
