@@ -13,7 +13,7 @@ final class VideoViewModel: ObservableObject {
     @Published var player: AVPlayer?
 
     @Published var isPlaying = false
-    @Published var isMuted = false
+    @Published var isMuted = true
 
     private var subscriptions = Set<AnyCancellable>()
     @Published var status: AVPlayer.Status = .unknown
@@ -27,7 +27,7 @@ final class VideoViewModel: ObservableObject {
             self.player = AVPlayer(url: attachment.full)
             self.player?.publisher(for: \.status)
                 .assign(to: &$status)
-
+            self.player?.isMuted = true
             NotificationCenter.default.addObserver(self, selector: #selector(finishVideo), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
         }
     }
